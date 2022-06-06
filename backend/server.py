@@ -11,30 +11,66 @@ config = {
 }
 
 @app.route('/publish_nft', methods=["POST"])
-def index():
+def part1():
     input_json = request.json
     print(input_json.get("OCEAN_NETWORK_URL"))
-
-    # # Set envvars
-    TEST_PRIVATE_KEY1="0x8467415bb2ba7c91084d932276214b11a3dd9bdb2930fefa194b666dd8020b99"
-    TEST_PRIVATE_KEY2="0x1d751ded5a32226054cd2e71261039b65afb9ee1c746d055dd699b1150a5befc"
-
-    # Set the address file only for ganache
-    # ADDRESS_FILE="~/.ocean/ocean-contracts/artifacts/address.json"
-
-    # Set network URL
-    OCEAN_NETWORK_URL="http://127.0.0.1:8545"
     try:
         TEST_PRIVATE_KEY1 = input_json.get("TEST_PRIVATE_KEY1")
-        TEST_PRIVATE_KEY2 = input_json.get("TEST_PRIVATE_KEY2")
-        ADDRESS_FILE = input_json.get("ADDRESS_FILE")
+        # TEST_PRIVATE_KEY2 = input_json.get("TEST_PRIVATE_KEY2")
+        # ADDRESS_FILE = input_json.get("ADDRESS_FILE")
         OCEAN_NETWORK_URL = input_json.get("OCEAN_NETWORK_URL")
     except:
         print(input_json.getKeys())
         return 'Problem getting required params from body',400
     # c2d_test.test()
-    c2d_test.test_main(TEST_PRIVATE_KEY1, TEST_PRIVATE_KEY2, ADDRESS_FILE, OCEAN_NETWORK_URL)
+    c2d_test.publish_nft(TEST_PRIVATE_KEY1, OCEAN_NETWORK_URL)
+    return 'Ocean', 200
+
+@app.route('/publish_dataset', methods=["POST"])
+def part2():
+    input_json = request.json
+    print(input_json.get("OCEAN_NETWORK_URL"))
+    try:
+        TEST_PRIVATE_KEY1 = input_json.get("TEST_PRIVATE_KEY1")
+        # TEST_PRIVATE_KEY2 = input_json.get("TEST_PRIVATE_KEY2")
+        # ADDRESS_FILE = input_json.get("ADDRESS_FILE")
+        OCEAN_NETWORK_URL = input_json.get("OCEAN_NETWORK_URL")
+        data_nft_address = input_json.get("data_nft_address")
+    except:
+        print(input_json.getKeys())
+        return 'Problem getting required params from body',400
+    # c2d_test.test()
+    c2d_test.publish_dataset(TEST_PRIVATE_KEY1, OCEAN_NETWORK_URL,data_nft_address)
+    return 'Ocean', 200
+
+@app.route('/publish_alg', methods=["POST"])
+def part3():
+    input_json = request.json
+    print(input_json.get("OCEAN_NETWORK_URL"))
+    try:
+        TEST_PRIVATE_KEY1 = input_json.get("TEST_PRIVATE_KEY1")
+        OCEAN_NETWORK_URL = input_json.get("OCEAN_NETWORK_URL")
+    except:
+        print(input_json.getKeys())
+        return 'Problem getting required params from body',400
+    c2d_test.publish_alg(TEST_PRIVATE_KEY1, OCEAN_NETWORK_URL)
+    return 'Ocean', 200
+
+@app.route('/allow_alg', methods=["POST"])
+def part4():
+    input_json = request.json
+    print(input_json.get("OCEAN_NETWORK_URL"))
+    try:
+        TEST_PRIVATE_KEY1 = input_json.get("TEST_PRIVATE_KEY1")
+        OCEAN_NETWORK_URL = input_json.get("OCEAN_NETWORK_URL")
+        DATA_did = input_json.get("DATA_did")
+        ALGO_did = input_json.get("ALGO_did")
+    except:
+        print(input_json.getKeys())
+        return 'Problem getting required params from body',400
+    c2d_test.allow_alg(TEST_PRIVATE_KEY1, OCEAN_NETWORK_URL, DATA_did, ALGO_did)
     return 'Ocean', 200
 
 if __name__ == '__main__':
     app.run(host=config.get("HOST"), port=config.get("PORT"), debug=True)
+

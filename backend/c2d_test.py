@@ -32,8 +32,8 @@ def publish_nft(TEST_PRIVATE_KEY1, OCEAN_NETWORK_URL):
 def publish_dataset(TEST_PRIVATE_KEY1, OCEAN_NETWORK_URL, data_nft_address):
     config = ExampleConfig.get_config(OCEAN_NETWORK_URL)
     ocean = Ocean(config)
-
-    data_nft = ocean.assets.resolve(data_nft_address)
+    data_nft = ocean.get_nft_token(data_nft_address)
+    print(f"NFT address: {data_nft_address}")
 
     publisher_private_key = TEST_PRIVATE_KEY1
     publisher_wallet = Wallet(ocean.web3, publisher_private_key, config.block_confirmations, config.transaction_timeout)
@@ -59,7 +59,7 @@ def publish_dataset(TEST_PRIVATE_KEY1, OCEAN_NETWORK_URL, data_nft_address):
     )
 
     # Encrypt file(s) using provider
-    print(f"Encrypting {DATA_metadata.name} ")
+    print(f"Encrypting {DATA_metadata.get('name')} ")
     DATA_encrypted_files = ocean.assets.encrypt_files([DATA_url_file])
 
     # Set the compute values for compute service
@@ -152,16 +152,21 @@ def publish_alg(TEST_PRIVATE_KEY1, OCEAN_NETWORK_URL):
 
     print(f"ALGO_asset did = '{ALGO_asset.did}'")
 
-def permission(TEST_PRIVATE_KEY1, TEST_PRIVATE_KEY2, OCEAN_NETWORK_URL):
+def allow_alg(TEST_PRIVATE_KEY1, OCEAN_NETWORK_URL, DATA_did, ALGO_did):
     config = ExampleConfig.get_config(OCEAN_NETWORK_URL)
     ocean = Ocean(config)
 
     publisher_private_key = TEST_PRIVATE_KEY1
     publisher_wallet = Wallet(ocean.web3, publisher_private_key, config.block_confirmations, config.transaction_timeout)
 
+    DATA_asset = ocean.assets.resolve(DATA_did)
+    ALGO_asset = ocean.assets.resolve(ALGO_did)
+
     compute_service = DATA_asset.services[0]
     compute_service.add_publisher_trusted_algorithm(ALGO_asset)
     DATA_asset = ocean.assets.update(DATA_asset, publisher_wallet)
+    print(f"Gave {DATA_did} permission to use {ALGO_did}")
+    return True
 
 def transfer_tokens(TEST_PRIVATE_KEY1, TEST_PRIVATE_KEY2, OCEAN_NETWORK_URL):
     config = ExampleConfig.get_config(OCEAN_NETWORK_URL)
