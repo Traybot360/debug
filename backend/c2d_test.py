@@ -168,7 +168,7 @@ def allow_alg(TEST_PRIVATE_KEY1, OCEAN_NETWORK_URL, DATA_did, ALGO_did):
     print(f"Gave {DATA_did} permission to use {ALGO_did}")
     return True
 
-def transfer_tokens(TEST_PRIVATE_KEY1, TEST_PRIVATE_KEY2, OCEAN_NETWORK_URL):
+def transfer_tokens(TEST_PRIVATE_KEY1, TEST_PRIVATE_KEY2, OCEAN_NETWORK_URL, DATA_address, ALGO_address):
     config = ExampleConfig.get_config(OCEAN_NETWORK_URL)
     ocean = Ocean(config)
 
@@ -182,6 +182,9 @@ def transfer_tokens(TEST_PRIVATE_KEY1, TEST_PRIVATE_KEY2, OCEAN_NETWORK_URL):
         config.transaction_timeout,
     )
     print(f"bob_wallet.address = '{bob_wallet.address}'")
+
+    DATA_datatoken = ocean.get_datatoken(DATA_address)
+    ALGO_datatoken = ocean.get_datatoken(ALGO_address)
 
     # publisher mints DATA datatokens and ALGO datatokens to Bob.
     # Alternatively, Bob might have bought these in a market.
@@ -211,6 +214,7 @@ def start_compute_job(DATA_did, ALGO_did, TEST_PRIVATE_KEY2, OCEAN_NETWORK_URL):
 
     compute_service = DATA_asset.services[0]
     algo_service = ALGO_asset.services[0]
+    print(compute_service.service_endpoint, "endpoint")
     environments = ocean.compute.get_c2d_environments(compute_service.service_endpoint)
 
     

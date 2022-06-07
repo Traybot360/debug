@@ -603,7 +603,8 @@ class DataServiceProvider:
                 provider_uri
             )
             environments = DataServiceProvider._http_method("get", envs_endpoint).json()
-
+            print("envs_endpoint: ", envs_endpoint)
+            print("it worked :)", environments, provider_uri)
             return environments
         except requests.exceptions.RequestException:
             pass
